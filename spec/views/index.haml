@@ -1,0 +1,11 @@
+%div{ data: { bind_url: '/tweets' } }
+
+%form{ action: '/tweets', method: 'post', data: { submit_wipe: '', remote: '' } }
+  %div
+    %label{ for: 'tweet_message' } Message
+    %input#tweet_message{ name: 'tweet[message]' }
+
+  %div
+    %button Tweet
+
+%div{ data: { bind_url: '/tweets' } }

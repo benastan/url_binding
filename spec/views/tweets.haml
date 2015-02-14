@@ -1,0 +1,3 @@
+- tweets.each do |tweet|
+  %div#tweet{ data: { bind_url: "/tweets/#{tweet[:id]}" } }
+    = haml :tweet, locals: { tweet: tweet }

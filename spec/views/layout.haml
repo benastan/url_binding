@@ -1,0 +1,10 @@
+%html
+  :css
+    form { display: inline; }
+  %body
+    = yield
+
+    %script{ src: '/jquery.js' }
+    %script{ src: '/jquery-ujs.js' }
+    %script{ src: '/url_binding.js' }
+    %script{ src: '/script.js' }

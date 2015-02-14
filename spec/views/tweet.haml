@@ -1,0 +1,9 @@
+- unless tweet[:archived] == true
+  %form{ action: "/tweets/#{tweet[:id]}", method: 'patch', data: { remote: true } }
+    %input#tweet_message{ name: 'tweet[message]', value: tweet[:message], data: { change_submit: '' } }
+
+  %form{ action: "/tweets/#{tweet[:id]}", method: 'patch', data: { remote: true } }
+    %input#tweet_message{ type: 'hidden', name: 'tweet[archived]', value: 'true' }
+
+    %a{ href: 'javascript:void(0)', data: { click_submit: '' } }
+      x
