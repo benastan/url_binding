@@ -6,7 +6,7 @@ $(document).on('click', '[data-click-submit]', function() {
   $(this).parents('form').submit();
 });
 
-$(document).on('ajax:complete', '[data-submit-wipe]', function() {
+$(document).on('ajax:complete', '[data-submit-wipe]', function(e, xhr, status) {
   if (status === 'success' && $(this).data('remote') !== undefined) this.reset();
   return true;
 });
@@ -47,14 +47,17 @@ $(document).on('submit', '[data-submit-remove]', function(e) {
 //   e.preventDefault();
 // });
 
-var eventSource = new EventSource('/events');
+var lastEventSentAt = +new Date(lastEvent.sent_at);
+var eventSource = new EventSource('/events?sent_at='+lastEventSentAt);
 eventSource.onmessage = function(e) {
   console.log('Received: '+e.data)
+  lastEventSentAt = +new Date();
   $(document).triggerHandler('bind:url', e.data);
 };
 
 eventSource.onerror = function(e) {
   console.log('lost connection');
+  this.url = '/events?sent_at='+lastEventSentAt;
   $(document).triggerHandler('bind:url', '/tweets');  
 }
 

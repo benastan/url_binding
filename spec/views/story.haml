@@ -1,4 +1,10 @@
-%form{ action: "/stories/#{story[:id]}/edit", data: { remote: '', submit_remove: '' } }
-  %label= story[:title]
+- unless story[:archived]
+  %div{ data: { submit_remove: '' } }
+    %label= story[:title]
+    
+    %form{ action: "/stories/#{story[:id]}/edit", data: { remote: '',  } }
+      %button edit
 
-  %button edit
+    %form{ action: "/stories/#{story[:id]}", method: :patch, data: { remote: '' } }
+      %input{ type: 'hidden', name: 'story[archived]', value: 'true' }
+      %button x

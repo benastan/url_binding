@@ -1,5 +1,6 @@
 require 'sinatra/base'
 require 'pry'
+require 'json'
 require 'sequel'
 require 'pathname'
 require 'forme'
@@ -9,17 +10,30 @@ class App < Sinatra::Base
     action_methods = [ 'POST', 'PATCH', 'DELETE' ]
     if action_methods.include?(request.request_method)
       p "#{request.request_method}: Notifying of #{request.path}"
+      DB[:url_events].insert(url: request.path, sent_at: Time.new)
       DB.notify('client', payload: request.path)
     end
   end
 
   get '/' do
-    haml :index
+    last_event = DB[:url_events].order(Sequel.asc(:sent_at)).last
+    haml :index, locals: { last_event: last_event }
   end
 
   get '/events' do
+    last_event_sent_at = Time.at(params[:sent_at].to_i / 1000)
     content_type 'text/event-stream'
     stream(:keep_open) do |out|
+      url_events = DB[:url_events].
+        where('sent_at > ?', last_event_sent_at).
+        map { |url_event| url_event[:url] }.
+        uniq
+      
+      p "Catching a client up on #{url_events.join(', ')}"
+      url_events.each do |url|
+        out << "data:#{url}\n\n"
+      end
+
       DB.listen('client', loop: true) do |channel, event_id, payload|
         out << "data:#{payload}\n\n"
       end
@@ -27,7 +41,7 @@ class App < Sinatra::Base
   end
 
   get '/stories' do
-    stories = DB[:stories].all
+    stories = DB[:stories].where('archived IS NULL')
     haml :stories, locals: { stories: stories }, layout: false
   end
 
