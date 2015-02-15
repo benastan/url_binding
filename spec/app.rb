@@ -2,8 +2,17 @@ require 'sinatra/base'
 require 'pry'
 require 'sequel'
 require 'pathname'
+require 'forme'
 
 class App < Sinatra::Base
+  after do
+    action_methods = [ 'POST', 'PATCH', 'DELETE' ]
+    if action_methods.include?(request.request_method)
+      p "#{request.request_method}: Notifying of #{request.path}"
+      DB.notify('client', payload: request.path)
+    end
+  end
+
   get '/' do
     haml :index
   end
@@ -11,32 +20,68 @@ class App < Sinatra::Base
   get '/events' do
     content_type 'text/event-stream'
     stream(:keep_open) do |out|
-      DB.listen('tweets', loop: true) do |channel, event_id, payload|
+      DB.listen('client', loop: true) do |channel, event_id, payload|
         out << "data:#{payload}\n\n"
       end
     end
   end
 
-  get '/tweets' do
-    tweets = DB[:tweets].where('archived IS NULL')
-    haml :tweets, locals: { tweets: tweets }, layout: false
+  get '/stories' do
+    stories = DB[:stories].all
+    haml :stories, locals: { stories: stories }, layout: false
   end
 
-  post '/tweets' do
-    id = DB[:tweets].insert(params[:tweet])
-    DB.notify('tweets', payload: "/tweets")
-    haml ''
+  post '/stories' do
+    stories = DB[:stories].insert(params[:story])
+    head 200
   end
 
-  get '/tweets/:id' do
-    tweet = DB[:tweets][id: params[:id]]
-    haml :tweet, locals: { tweet: tweet }, layout: false
+  get '/stories/:id/edit' do
+    story = DB[:stories][id: params[:id]]
+    story_comments = DB[:story_comments].where('archived IS NULL').where(story_id: params[:id])
+    haml :edit_story, locals: { story: story, story_comments: story_comments }, layout: false
   end
 
-  patch '/tweets/:id' do
-    tweet = DB[:tweets].where(id: params[:id]).update(params[:tweet])
-    DB.notify('tweets', payload: "/tweets/#{params[:id]}")
-    haml ''
+  get '/stories/:id' do
+    story = DB[:stories][id: params[:id]]
+    haml :story, locals: { story: story }, layout: false
+  end
+
+  patch '/stories/:id' do
+    DB[:stories].where(id: params[:id]).update(params[:story])
+    head 200
+  end
+
+  get '/stories/:story_id/comments' do
+    story_comments = DB[:story_comments].where('archived IS NULL').where(story_id: params[:story_id])
+    haml :story_comments, locals: { story_comments: story_comments }, layout: false
+  end
+
+  post '/stories/:story_id/comments' do
+    comment = params[:story_comment]
+    comment[:story_id] = params[:story_id]
+    DB[:story_comments].insert(comment)
+    head 200
+  end
+
+  patch '/comments/:id' do
+    id = params[:id]
+    story_comment = {
+      content: params[:story_comment][:content],
+      archived: params[:story_comment][:archived]
+    }
+    DB[:story_comments].where(id: id).update(story_comment)
+    head 200
+  end
+
+  get '/comments/:id' do
+    story_comment = DB[:story_comments][id: params[:id]]
+    haml :story_comment, locals: { story_comment: story_comment }, layout: false
+  end
+  
+  get '/comments/:id/edit' do
+    story_comment = DB[:story_comments][id: params[:id]]
+    haml :edit_story_comment, locals: { story_comment: story_comment }, layout: false
   end
 
   get '/jquery.js' do
@@ -52,6 +97,8 @@ class App < Sinatra::Base
   end
 
   helpers do
+    include Forme
+
     def jquery_rails_location
       Bundler.load.specs.find { |spec| spec.name == 'jquery-rails' }.full_gem_path
     end
@@ -70,8 +117,36 @@ class App < Sinatra::Base
       path = File.expand_path('../../lib/assets/javascripts/url_binding.js', __FILE__)
       javascript Pathname(path)
     end
+
+    def head(status_code)
+      status(status_code)
+      haml '', layout: false
+    end
   end
   
-  DB = Sequel.connect('postgres://localhost/url_binding_test', max_connections: 10)  
+  DB = Sequel.connect('postgres://localhost/url_binding_test', max_connections: 1000)  
   set :public_folder, File.dirname(__FILE__) + '/static'
 end
+
+
+  # get '/tweets' do
+  #   tweets = DB[:tweets].where('archived IS NULL')
+  #   haml :tweets, locals: { tweets: tweets }, layout: false
+  # end
+
+  # post '/tweets' do
+  #   id = DB[:tweets].insert(params[:tweet])
+  #   DB.notify('client', payload: "/tweets")
+  #   haml ''
+  # end
+
+  # get '/tweets/:id' do
+  #   tweet = DB[:tweets][id: params[:id]]
+  #   haml :tweet, locals: { tweet: tweet }, layout: false
+  # end
+
+  # patch '/tweets/:id' do
+  #   tweet = DB[:tweets].where(id: params[:id]).update(params[:tweet])
+  #   DB.notify('client', payload: "/tweets/#{params[:id]}")
+  #   haml ''
+  # end

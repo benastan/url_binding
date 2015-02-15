@@ -1,0 +1,13 @@
+- unless story_comment[:archived]
+  #story_comment{ data: { submit_remove: '' } }
+    %div
+      %strong= story_comment[:commentee]
+    
+    %div
+      = story_comment[:content]
+      %form{ action: "/comments/#{story_comment[:id]}/edit", method: :get, data: { remote: '' } }
+        %button edit
+
+      %form{ action: "/comments/#{story_comment[:id]}", method: :patch, data: { remote: '',  } }
+        %input{ type: 'hidden', name: 'story_comment[archived]', value: 'true' }
+        %button x

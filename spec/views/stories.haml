@@ -1,0 +1,6 @@
+- stories.each do |story|
+  .story
+    %div{ data: { bind_url: "/stories/#{story[:id]}" } }
+      = haml :story, locals: { story: story }
+
+    %div{ data: { bind_url: "/stories/#{story[:id]}/edit" } }

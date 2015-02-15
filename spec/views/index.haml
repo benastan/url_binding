@@ -1,11 +1,22 @@
-%div{ data: { bind_url: '/tweets' } }
+- if false
+  %div{ data: { bind_url: '/tweets' } }
 
-%form{ action: '/tweets', method: 'post', data: { submit_wipe: '', remote: '' } }
+  %form{ action: '/tweets', method: 'post', data: { submit_wipe: '', remote: '' } }
+    %div
+      %label{ for: 'tweet_message' } Message
+      %input#tweet_message{ name: 'tweet[message]' }
+
+    %div
+      %button Tweet
+
+  %div{ data: { bind_url: '/tweets' } }
+
+%div{ data: { bind_url: '/stories' } }
+
+%form{ action: '/stories', method: 'post', data: { submit_wipe: '', remote: '' } }
+  %h1 New Story
+
+  = haml :story_form, locals: { story: {} }
+
   %div
-    %label{ for: 'tweet_message' } Message
-    %input#tweet_message{ name: 'tweet[message]' }
-
-  %div
-    %button Tweet
-
-%div{ data: { bind_url: '/tweets' } }
+    %button Create Story

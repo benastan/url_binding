@@ -32,5 +32,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "sequel"
   spec.add_development_dependency "database_cleaner"
   spec.add_development_dependency "shotgun"
-  spec.add_development_dependency "puma"
+  spec.add_development_dependency "unicorn"
+  spec.add_development_dependency "forme"
 end

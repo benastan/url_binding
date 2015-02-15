@@ -1,0 +1,32 @@
+%div{ data: { submit_remove: '' } }
+  %form{ action: "/stories/#{story[:id]}", method: :patch, data: { remote: true } }
+    %div{ data: { block_bind: '' }, style: 'display: none;' }
+      %p This story has been updated
+      %button{ data: { unblock_bind: '' } } Reload
+  
+    = haml :story_form, locals: { story: story }
+
+    %div
+      %button Update Story
+
+  %div{ data: { bind_url: "/stories/#{story[:id]}/comments" } }
+    = haml :story_comments, locals: { story_comments: story_comments }
+
+  %p
+    %strong Comments
+
+  %form{ action: "/stories/#{story[:id]}/comments", method: :post, data: { remote: true, submit_wipe: '', nested_form: '' } }
+    %div
+      %label{ for: 'story_comment_commentee' } Your Name
+
+    %div
+      %input#story_comment_commentee{ name: 'story_comment[commentee]' }
+
+    %div
+      %label{ for: 'story_comment_content' } Content
+
+    %div
+      %textarea#comment_content{ name: 'story_comment[content]' }
+
+    %div
+      %button Comment

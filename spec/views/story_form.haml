@@ -1,0 +1,31 @@
+%div
+  %label{ for: 'story_title' } Title  
+
+%div
+  %input#story_title{ name: 'story[title]', value: story[:title] }
+
+%div
+  %label{ for: 'story_epic' } Epic
+  %input#story_epic{ type: 'hidden', name: 'story[epic]', value: 'false' }
+    - if story[:epic]
+      %input#story_epic{ type: 'checkbox', name: 'story[epic]', checked: :checked, value: 'true' }
+    - else
+      %input#story_epic{ type: 'checkbox', name: 'story[epic]', value: 'true' }
+  
+%div
+  %label{ for: 'story_description' } Description
+
+%div
+  %textarea#story_description{ name: 'story[description]', value: story[:description] }
+  
+%div
+  %label{ for: 'story_owner' } Owner
+  
+%div
+  %input#story_owner{ name: 'story[owner]', value: story[:owner] }
+
+%div
+  %label{ for: 'story_assignee' } Assignee
+  
+%div
+  %input#story_assignee{ name: 'story[assignee]', value: story[:assignee] }
