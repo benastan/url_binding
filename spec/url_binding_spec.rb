@@ -48,6 +48,18 @@ describe UrlBinding do
 
     fill_in 'Your Name', with: 'Ben'
     fill_in 'Content', with: 'This is a great story!'
+
+    story_id = DB[:stories].where('archived IS NULL').first[:id]
+    DB[:story_comments].insert(
+      story_id: story_id,
+      commentee: 'Duder McDuderstein',
+      content: 'The dude abides!'
+    )
+    DB.notify('client', payload: "/stories/#{story_id}/comments")
+
+    expect(page).to have_content 'Duder McDuderstein'
+    expect(page).to have_content 'The dude abides!'
+
     click_on 'Comment'
 
     expect(page).to have_content 'This is a great story!'
