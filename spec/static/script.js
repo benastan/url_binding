@@ -37,17 +37,17 @@ $(document).on('submit', '[data-submit-remove]', function(e) {
   return true;
 });
 
-// $(document).on('submit', '[data-nested-form]', function(e) {
-//   e.stopPropagation();
-//   e.preventDefault();
-// });
+$(document).on('submit', '[data-nested-form]', function(e) {
+  e.stopPropagation();
+  e.preventDefault();
+});
 
-// $(document).on('ajax:complete', '[data-nested-form]', function(e) {
-//   e.stopPropagation();
-//   e.preventDefault();
-// });
+$(document).on('ajax:complete', '[data-nested-form]', function(e) {
+  e.stopPropagation();
+  e.preventDefault();
+});
 
-var lastEventSentAt = +new Date(lastEvent.sent_at);
+var lastEventSentAt = lastEvent ? +new Date(lastEvent.sent_at) : +new Date;
 var eventSource = new EventSource('/events?sent_at='+lastEventSentAt);
 eventSource.onmessage = function(e) {
   console.log('Received: '+e.data)

@@ -1,5 +1,5 @@
 require 'bundler'
 Bundler.require
-require './app'
+require './spec/app'
 
 run App

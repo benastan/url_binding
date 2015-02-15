@@ -9,11 +9,11 @@
     %div
       %button Update Story
 
-  %div{ data: { bind_url: "/stories/#{story[:id]}/comments" } }
-    = haml :story_comments, locals: { story_comments: story_comments }
-
   %p
     %strong Comments
+
+  %div{ data: { bind_url: "/stories/#{story[:id]}/comments" } }
+    = haml :story_comments, locals: { story_comments: story_comments }
 
   %form{ action: "/stories/#{story[:id]}/comments", method: :post, data: { remote: true, submit_wipe: '', nested_form: '' } }
     %div
@@ -26,7 +26,7 @@
       %label{ for: 'story_comment_content' } Content
 
     %div
-      %textarea#comment_content{ name: 'story_comment[content]' }
+      %textarea#story_comment_content{ name: 'story_comment[content]' }
 
     %div
       %button Comment
