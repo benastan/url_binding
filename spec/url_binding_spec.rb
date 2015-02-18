@@ -15,13 +15,14 @@ describe UrlBinding do
 
     expect(page).to have_content('Magically appearing story')
 
+    click_on 'New Story'
     fill_in 'Title', with: 'Hello, World'
     fill_in 'Description', with: 'This is my first story'
     click_on 'Create Story'
     expect(page).to have_content('Hello, World')
 
     within find('.story', text: 'Hello, World') do
-      click_on 'edit'
+      click_on 'Edit Story'
     end
 
     within find('.edit-story') do
@@ -35,7 +36,7 @@ describe UrlBinding do
     expect(page).to have_content 'Get shit done'
 
     within find('.story', text: 'Get shit done') do
-      click_on 'x'
+      click_on 'Delete Story'
     end
     
     expect(page).to_not have_content 'Get shit done'
@@ -43,7 +44,7 @@ describe UrlBinding do
     expect(page).to_not have_content 'Get shit done'
 
     within find('.story', text: 'Magically appearing story') do
-      click_on 'edit'
+      click_on 'Edit Story'
     end
 
     fill_in 'Your Name', with: 'Ben'

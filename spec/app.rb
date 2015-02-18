@@ -40,9 +40,26 @@ class App < Sinatra::Base
     end
   end
 
+  delete '/stories/:id' do
+    id = params[:id]
+    DB[:stories].where(id: id).update(archived: true)
+    head 200
+  end
+
+  patch '/stories' do
+    story_ids = params[:stories].map { |story| story['id'] }
+    pg_array = "{#{story_ids.join(',')}}"
+    DB[:stories].where(id: story_ids).update("position = idx('#{pg_array}', id)")
+    head 200
+  end
+
   get '/stories' do
-    stories = DB[:stories].where('archived IS NULL')
+    stories = DB[:stories].where('archived IS NULL').order(Sequel.asc(:position))
     haml :stories, locals: { stories: stories }, layout: false
+  end
+
+  get '/stories/new' do
+    haml :new_story, layout: false
   end
 
   post '/stories' do

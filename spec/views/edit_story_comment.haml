@@ -1,4 +1,4 @@
-%form{ action: "/comments/#{story_comment[:id]}", method: :patch, data: { remote: '', submit_remove: '' } }
+%form{ action: "/comments/#{story_comment[:id]}", method: :patch, data: { remote: '', submit_remove: '', nested_form: '' } }
   %div
     %strong= story_comment[:commentee]
   
@@ -6,4 +6,4 @@
     %textarea#story_comment_content{ name: 'story_comment[content]' }= story_comment[:content]
 
   %div
-    %button Update
+    %button.btn-tiny Update

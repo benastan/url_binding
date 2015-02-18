@@ -1,25 +1,14 @@
-- if false
-  %div{ data: { bind_url: '/tweets' } }
-
-  %form{ action: '/tweets', method: 'post', data: { submit_wipe: '', remote: '' } }
+.row
+  .large-6.columns
+    %form{ action: '/stories', method: 'patch', data: { remote: '' } }
+      #stories{ data: { bind_url: '/stories' } }
+  
+  .large-6.columns  
     %div
-      %label{ for: 'tweet_message' } Message
-      %input#tweet_message{ name: 'tweet[message]' }
+      %div{ data: { bind_url: '/stories/new' } }
 
     %div
-      %button Tweet
-
-  %div{ data: { bind_url: '/tweets' } }
-
-%div{ data: { bind_url: '/stories' } }
-
-%form{ action: '/stories', method: 'post', data: { submit_wipe: '', remote: '' } }
-  %h1 New Story
-
-  = haml :story_form, locals: { story: {} }
-
-  %div
-    %button Create Story
+      .edit-story{ data: { bind_url: '/stories/:id/edit' } }
 
 :javascript
   window.lastEvent = #{JSON.dump(last_event)}

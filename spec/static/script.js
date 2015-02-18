@@ -1,9 +1,9 @@
 $(document).on('change', '[data-change-submit]', function() {
-  $(this).parents('form').submit();
+  $(this).submit();
 });
 
 $(document).on('click', '[data-click-submit]', function() {
-  $(this).parents('form').submit();
+  $(this).submit();
 });
 
 $(document).on('ajax:complete', '[data-submit-wipe]', function(e, xhr, status) {
@@ -66,3 +66,7 @@ eventSource.onopen = function(e) {
 }
 
 $(document).triggerHandler('bind:url', '/stories');
+
+$('#stories').sortable({
+  update: function() { $(this).submit(); }
+});

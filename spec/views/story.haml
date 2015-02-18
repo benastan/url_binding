@@ -1,10 +1,14 @@
 - unless story[:archived]
-  %div{ data: { submit_remove: '' } }
-    %label= story[:title]
-    
-    %form{ action: "/stories/#{story[:id]}/edit", data: { remote: '',  } }
-      %button edit
+  .row
+    .large-6.columns
+      #{story[:title]}
+      - if story[:assignee] != ''
+        %span.label= story[:assignee]
 
-    %form{ action: "/stories/#{story[:id]}", method: :patch, data: { remote: '' } }
-      %input{ type: 'hidden', name: 'story[archived]', value: 'true' }
-      %button x
+    .large-6.columns.right
+      %a.right{ title: 'Delete Story', href: "/stories/#{story[:id]}", data: { method: 'delete', remote: '' } }
+        .fa.fa-trash
+      %span.right
+        &nbsp;&nbsp;&nbsp;
+      %a.right{ title: 'Edit Story', href: "/stories/#{story[:id]}/edit", data: { remote: '' } }
+        .fa.fa-pencil 

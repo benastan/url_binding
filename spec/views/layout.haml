@@ -1,12 +1,37 @@
 %html
+  %link{ href: '/font-awesome/css/font-awesome.min.css', rel: 'stylesheet', type: 'text/css' }
+  %link{ href: '/foundation.min.css', rel: 'stylesheet', type: 'text/css' }
   :css
-    form { display: inline; }
+    body {
+      font-family: Helvetica Neue, Arial, sans-serif;
+    }
+    
+    form { display: inline !important; }
+    
     .hide { display: none; }
+    
+    input[type="text"], textarea {
+      width: 100%;
+      border-radius: 2px;
+      border: 1px solid #ccc;
+      padding: 0.5em;
+    }
+    
+    div { margin: 0.5em 0; }
+    .story { cursor: move; }
 
   %body
-    = yield
+    .row
+      .large-12
+        %div.right
+          %form{ action: '/stories/new', data: { remote: '' } }
+            %button.tiny New Story
+
+    %div
+      = yield
 
     %script{ src: '/jquery.js' }
+    %script{ src: '/jquery-ui.min.js' }
     %script{ src: '/jquery-ujs.js' }
     %script{ src: '/url_binding.js' }
     %script{ src: '/script.js' }

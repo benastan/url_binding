@@ -1,32 +1,42 @@
 %div{ data: { submit_remove: '' } }
-  %form{ action: "/stories/#{story[:id]}", method: :patch, data: { remote: true } }
-    %div{ data: { block_bind: '' }, style: 'display: none;' }
-      %p This story has been updated
-      %button{ data: { unblock_bind: '' } } Reload
-  
-    = haml :story_form, locals: { story: story }
+  .row
+    .large-9.columns
+      %h4
+        Edit Story
+    .large-3.columns
+      %a.right{ title: 'Close', href: 'javascript:void(0)', data: { click_submit: '' } }
+        .fa.fa-remove
 
-    %div
-      %button Update Story
+  .panel
+    %form{ action: "/stories/#{story[:id]}", method: :patch, data: { remote: true } }
+      %div{ data: { block_bind: '' }, style: 'display: none;' }
+        %p This story has been updated
+        %button.btn-tiny{ data: { unblock_bind: '' } } Reload
+    
+      = haml :story_form, locals: { story: story }
 
-  %p
-    %strong Comments
+      %div
+        %button.btn-tiny Update Story
 
-  %div{ data: { bind_url: "/stories/#{story[:id]}/comments" } }
-    = haml :story_comments, locals: { story_comments: story_comments }
+  .panel
+    %p
+      %strong Comments
 
-  %form{ action: "/stories/#{story[:id]}/comments", method: :post, data: { remote: true, submit_wipe: '', nested_form: '' } }
-    %div
-      %label{ for: 'story_comment_commentee' } Your Name
+    %div{ data: { bind_url: "/stories/#{story[:id]}/comments" } }
+      = haml :story_comments, locals: { story_comments: story_comments }
 
-    %div
-      %input#story_comment_commentee{ name: 'story_comment[commentee]' }
+    %form{ action: "/stories/#{story[:id]}/comments", method: :post, data: { remote: true, submit_wipe: '', nested_form: '' } }
+      %div
+        %label{ for: 'story_comment_commentee' } Your Name
 
-    %div
-      %label{ for: 'story_comment_content' } Content
+      %div
+        %input#story_comment_commentee{ name: 'story_comment[commentee]', type: 'text' }
 
-    %div
-      %textarea#story_comment_content{ name: 'story_comment[content]' }
+      %div
+        %label{ for: 'story_comment_content' } Content
 
-    %div
-      %button Comment
+      %div
+        %textarea#story_comment_content{ name: 'story_comment[content]', type: 'text' }
+
+      %div
+        %button.btn-tiny Comment
