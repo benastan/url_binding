@@ -1,5 +1,14 @@
-- stories.each_with_index do |story, index|
-  %div.story
-    %input{ type: 'hidden', name: 'stories[][id]', value: story[:id] }
-    %div{ data: { bind_url: "/stories/#{story[:id]}" } }
-      = haml :story, locals: { story: story }
+- if stories.any?
+  - stories.each_with_index do |story, index|
+    %div.story
+      %input{ type: 'hidden', name: 'stories[][id]', value: story[:id] }
+      %div{ data: { bind_url: "/stories/#{story[:id]}" } }
+        = haml :story, locals: { story: story }
+- else
+  .panel
+    %h1
+      No Stories
+
+    %p
+      Click "New Story" to create your first story
+      %span.fa.fa-long-arrow-right
