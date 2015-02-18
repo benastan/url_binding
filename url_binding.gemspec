@@ -35,5 +35,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "shotgun"
   spec.add_development_dependency "unicorn"
   spec.add_development_dependency "capybara-puma"
-  spec.add_development_dependency "forme"
+  spec.add_development_dependency "foreman"
 end

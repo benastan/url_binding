@@ -10,6 +10,4 @@
     %div
       .edit-story{ data: { bind_url: '/stories/:id/edit' } }
 
-:javascript
-  window.lastEvent = #{JSON.dump(last_event)}
-  
+%script{ data: { url_stream: ENV['URL_STREAM_URL'], url_stream_last_event: JSON.dump(last_event) } }

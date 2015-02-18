@@ -1,13 +1,20 @@
 - unless story_comment[:archived]
   #story_comment{ data: { submit_remove: '', nested_form: '' } }
-    %div
-      %strong= story_comment[:commentee]
-    
-    %div
-      = story_comment[:content]
-      %form{ action: "/comments/#{story_comment[:id]}/edit", method: :get, data: { remote: '' } }
-        %button.tiny edit
+    .row
+      .large-10.columns
+        %strong= story_comment[:commentee]
 
-      %form{ action: "/comments/#{story_comment[:id]}", method: :patch, data: { remote: '',  } }
-        %input{ type: 'hidden', name: 'story_comment[archived]', value: 'true' }
-        %button.tiny x
+      .large-1.columns
+        %form.right{ action: "/comments/#{story_comment[:id]}/edit", method: :get, data: { remote: '' } }
+          %a{ href: 'javascript:void(0)', data: { click_submit: '' } }
+            .fa.fa-pencil
+
+      .large-1.columns
+        %form.right{ action: "/comments/#{story_comment[:id]}", method: :patch, data: { remote: '',  } }
+          %input{ type: 'hidden', name: 'story_comment[archived]', value: 'true' }
+          %a{ href: 'javascript:void(0)', data: { click_submit: '' } }
+            .fa.fa-remove
+    
+    .row
+      .large-12.columns
+        = story_comment[:content]

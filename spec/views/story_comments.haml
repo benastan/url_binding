@@ -1,6 +1,7 @@
 #comments
   - story_comments.each do |story_comment|
-    %div{ data: { bind_url: "/comments/#{story_comment[:id]}" } }
-      = haml :story_comment, locals: { story_comment: story_comment }
-  
-    %div{ data: { bind_url: "/comments/#{story_comment[:id]}/edit" } }
+    .story_comment.panel
+      %div{ data: { bind_url: "/comments/#{story_comment[:id]}" } }
+        = haml :story_comment, locals: { story_comment: story_comment }
+    
+      %div{ data: { bind_url: "/comments/#{story_comment[:id]}/edit" } }

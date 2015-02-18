@@ -3,9 +3,12 @@ require 'pry'
 require 'json'
 require 'sequel'
 require 'pathname'
-require 'forme'
 
 class App < Sinatra::Base
+  before do
+    response['Access-Control-Allow-Origin'] = 'http://localhost:8080'
+  end
+
   after do
     action_methods = [ 'POST', 'PATCH', 'DELETE' ]
     if action_methods.include?(request.request_method)
@@ -128,8 +131,6 @@ class App < Sinatra::Base
   end
 
   helpers do
-    include Forme
-
     def jquery_rails_location
       Bundler.load.specs.find { |spec| spec.name == 'jquery-rails' }.full_gem_path
     end
@@ -155,29 +156,6 @@ class App < Sinatra::Base
     end
   end
   
-  DB = Sequel.connect('postgres://localhost/url_binding_test', max_connections: 1000)  
+  DB = Sequel.connect(ENV['DATABASE_URL'], max_connections: 16)
   set :public_folder, File.dirname(__FILE__) + '/static'
 end
-
-
-  # get '/tweets' do
-  #   tweets = DB[:tweets].where('archived IS NULL')
-  #   haml :tweets, locals: { tweets: tweets }, layout: false
-  # end
-
-  # post '/tweets' do
-  #   id = DB[:tweets].insert(params[:tweet])
-  #   DB.notify('client', payload: "/tweets")
-  #   haml ''
-  # end
-
-  # get '/tweets/:id' do
-  #   tweet = DB[:tweets][id: params[:id]]
-  #   haml :tweet, locals: { tweet: tweet }, layout: false
-  # end
-
-  # patch '/tweets/:id' do
-  #   tweet = DB[:tweets].where(id: params[:id]).update(params[:tweet])
-  #   DB.notify('client', payload: "/tweets/#{params[:id]}")
-  #   haml ''
-  # end

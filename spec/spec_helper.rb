@@ -1,3 +1,6 @@
+ENV['URL_STREAM_URL'] = 'http://127.0.0.1:4000/events'
+ENV['DATABASE_URL'] = 'postgres://localhost/url_binding_test'
+
 require 'bundler'
 Bundler.require
 require 'capybara/webkit'
@@ -8,6 +11,7 @@ require 'pry'
 require 'database_cleaner'
 
 Capybara.app = App
+Capybara.server_port = 4000
 Capybara.current_driver = :selenium
 
 RSpec.configure do |config|
