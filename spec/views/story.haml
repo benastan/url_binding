@@ -1,11 +1,11 @@
 - unless story[:archived]
   .row
-    .large-6.columns
+    .small-9.columns
       #{story[:title]}
       - if story[:assignee] != ''
         %span.label= story[:assignee]
 
-    .large-6.columns.right
+    .small-3.columns.right
       %a.right{ title: 'Delete Story', href: "/stories/#{story[:id]}", data: { method: 'delete', remote: '' } }
         .fa.fa-trash
       %span.right
